@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "eventmachine-le"#, "~> 1.0.3"
-  spec.add_dependency "fibre", "~> 0.9"
+  spec.add_dependency "fibre", "~> 0.9.9"
   #spec.add_dependency "emmy-engine", "~> 0.1.0"
 
   spec.add_development_dependency "bundler", "~> 1.6"

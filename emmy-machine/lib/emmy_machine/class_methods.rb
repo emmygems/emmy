@@ -18,12 +18,12 @@ module EmmyMachine
 
     def run_block &b
       EventMachine.run do
-        fiber_block do
-          begin
+        begin
+          fiber_block do
             yield
-          ensure
-            stop
           end
+        ensure
+          stop
         end
       end
     end

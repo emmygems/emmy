@@ -9,6 +9,14 @@ describe EmmyMachine do
     }.to yield_control
   end
 
+  it "test run_block with raise" do
+    expect {
+      EmmyMachine.run_block do
+        raise "error"
+      end
+    }.to raise_error FiberError
+  end
+
   it "test connect" do
     expect { |block|
       EventMachine.run do
