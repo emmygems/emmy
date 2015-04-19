@@ -7,5 +7,5 @@ require "emmy_machine/class_methods"
 
 module EmmyMachine
   include ClassMethods
-  extend self
+  extend ClassMethods
 end

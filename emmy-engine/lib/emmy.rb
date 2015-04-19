@@ -1,9 +1,9 @@
 require 'emmy_machine'
 require 'emmy_http'
+require 'emmy_http/client'
 
 module Emmy
-  extend self
+  extend EmmyMachine::ClassMethods
 
-  include EmmyMachine
-  include EmmyHttp
+  autoload :Http, 'emmy/http'  
 end
