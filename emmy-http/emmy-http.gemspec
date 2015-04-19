@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = EmmyHttp::VERSION
   spec.authors       = ["inre"]
   spec.email         = ["inre.storm@gmail.com"]
-  spec.summary       = %q{EmmyHttp is a  }
+  spec.summary       = %q{EmmyHttp - EventMachine's HTTP Client}
   #spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = ""
   spec.license       = "MIT"
