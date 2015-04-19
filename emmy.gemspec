@@ -13,9 +13,7 @@ Gem::Specification.new do |spec|
 
   spec.files         = ["README.md"]
 
-  spec.add_dependency "emmy-engine",  "~> 0.1.1"
-  spec.add_dependency "emmy-machine", "~> 0.1"
-  spec.add_dependency "emmy-http",    "~> 0.1"
+  spec.add_dependency "emmy-engine"
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rspec", "~> 3"

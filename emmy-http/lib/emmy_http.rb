@@ -1,3 +1,4 @@
+require "uri"
 require "model_pack"
 require "emmy_http/version"
 require "forwardable"
