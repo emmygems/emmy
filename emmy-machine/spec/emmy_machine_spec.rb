@@ -14,7 +14,7 @@ describe EmmyMachine do
       EmmyMachine.run_block do
         raise "error"
       end
-    }.to raise_error FiberError
+    }.to raise_error Fibre::FiberError
   end
 
   it "test connect" do

@@ -49,9 +49,8 @@ module EmmyHttp
       end
     end
 
-    # FIXME: move to model_pack
     def ssl?
-      !!ssl
+      ssl || url.scheme == 'https' || url.port == 443
     end
 
     private
