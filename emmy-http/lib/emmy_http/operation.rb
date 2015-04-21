@@ -9,9 +9,10 @@ module EmmyHttp
 
     events :init, :head, :success, :error
 
-    def initialize(request, adapter)
+    def initialize(request, adapter, connection=nil)
       raise "invalid adapter" if adapter.nil? || !adapter.respond_to?(:to_a) || !adapter.respond_to?(:delegate=)
       @request          = request
+      @connection       = connection
       @adapter          = adapter
       @adapter.delegate = self
     end
@@ -66,30 +67,6 @@ module EmmyHttp
       }
     end
 
-    private
-=begin
-    def setup
-      adapter.setup
-
-      on :init do |connection|
-        @connection = connection
-      end
-
-      on :head do |operation, conn|
-        @response = request.response_class.new
-        response.headers = operation.adapter.headers
-      end
-
-      on :success do |response, operation, conn|
-        response.status = operation.adapter.status
-        response.body   = operation.adapter.body
-      end
-
-      on :error do |error, operation, conn|
-        response.status = operation.adapter.status
-      end
-    end
-=end
     #<<<
   end
 end
