@@ -68,6 +68,10 @@ module EmmyHttp
       end
     end
 
+    def body?
+      !body.empty?
+    end
+
     def redirection?
       300 <= status && 400 > status
     end

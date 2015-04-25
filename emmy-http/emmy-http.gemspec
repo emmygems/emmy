@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "fibre", "~> 0.9.3"
   spec.add_dependency "util_pack", "~> 0.1"
   spec.add_dependency "model_pack", "~> 0.9.6"
+  spec.add_dependency "addressable", ">= 2.3.8"
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake", "~> 10.0"

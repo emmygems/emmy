@@ -5,14 +5,15 @@ module EmmyHttp
 
     #def_delegator :operation, :sync, :init, :head, :success, :error, :init!, :head!, :success!, :error!, :to_a
 
-    attribute :type, default: "GET" # word *method* reserved in ruby
+    attribute :type, default: "GET" # word *method* reserved in ruby objects
     attribute :url,
-        writer: ->(url) { url.is_a?(URI) ? url : URI.parse(url) },
-        serialize: ->(value) { value.to_s }
+        writer: ->(v) { v.is_a?(String) ? Addressable::Template.new(v) : v },
+        serialize: ->(v) { v.is_a?(Addressable::Template) ? v.pattern : v.to_s }
     dictionary :headers
 
-    attribute :path    # replace url.path
-    attribute :query   # replace url.query
+    attribute  :path    # replace url.path
+    attribute  :query   # replace url.query
+    dictionary :params # params for url template
 
     # POST, PUT
     attribute :body    # string, json hash
@@ -20,9 +21,11 @@ module EmmyHttp
     attribute :json    # serializable hash/object to json
     attribute :file    # path
 
-    attribute :keep_alive, predicate: true
-    attribute :redirects, default: 6
-    attribute :raise_error, predicate: true, default: true
+    attribute :keep_alive, predicate: true                 # keep connection alive
+    attribute :encoding, default: true, predicate: true    # encode request
+    attribute :decoding, default: true, predicate: true    # decode response
+    attribute :redirects, default: 6                       # max redirects to follow
+    attribute :raise_error, predicate: true, default: true # raise error or return nil
 
     object :timeouts, class_name: Timeouts, default: Timeouts
     object :ssl, class_name: SSL
@@ -42,15 +45,19 @@ module EmmyHttp
       operation.sync
     end
 
+    def real_url
+      if url.is_a?(Addressable::Template)
+        url.expand(params)
+      else
+        Addressable::URI.parse(url.to_s)
+      end
+    end
+
     EmmyHttp::HTTP_METHODS.each do |name|
       self.def name do |a={}|
         update_attributes(a.is_a?(String) ? {url: a} : a)
         self
       end
-    end
-
-    def ssl?
-      ssl || url.scheme == 'https' || url.port == 443
     end
 
     private

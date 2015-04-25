@@ -1,4 +1,5 @@
-require "uri"
+require "addressable/uri"
+require 'addressable/template'
 require "model_pack"
 require "emmy_http/version"
 require "forwardable"
@@ -9,6 +10,8 @@ module EmmyHttp
   class RequestError < HttpError; end
   class ConnectionError < HttpError; end
   class TimeoutError < HttpError; end
+  class EncoderError < HttpError; end
+  class DecoderError < HttpError; end
 
   HTTP_METHODS = %w(get head delete put post patch options)
 
