@@ -18,11 +18,17 @@ describe EmmyHttp::Model do
     post '/post', as: :post_request
   end
 
+  class HTTPSBin < HTTPBin
+    url "https://httpbin.org"
+
+    get '/get',   as: :get_request
+  end
+
   around do |example|
     EmmyMachine.run_block &example
   end
 
-  it "have requests from model" do
+  it "has requests from model" do
     res = {
       get_response: HTTPBin.get_request!,
       post_response: HTTPBin.post_request!(form: {a: 5, b: 6})
@@ -30,5 +36,13 @@ describe EmmyHttp::Model do
 
     expect(res[:get_response].status).to be(200)
     expect(res[:post_response].status).to be(200)
+  end
+
+  it "inherits models" do
+    http_req = HTTPBin.get_request
+    https_req = HTTPSBin.get_request
+    https_req.sync
+    expect(http_req.real_url.to_s).to eq('http://httpbin.org')
+    expect(https_req.real_url.to_s).to eq('https://httpbin.org')
   end
 end

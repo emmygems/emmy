@@ -57,14 +57,18 @@ module EmmyHttp
 
     def content
       @content ||= case content_type
-        when 'application/json'
-          begin
-            JSON.parse(body)
-          rescue JSON::ParserError => e
-            raise ParserError, e.to_s
-          end
+      when 'application/json' then json
       else
         nil
+      end
+    end
+
+    def json(options={})
+      raise RequestError, 'Wrong Content-Type' unless content_type == 'application/json'
+      begin
+        JSON.parse(body, options)
+      rescue JSON::ParserError => e
+        raise ParserError, e.to_s
       end
     end
 

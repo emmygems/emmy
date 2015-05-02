@@ -12,7 +12,13 @@ module EmmyHttp
 
     module InstanceMethods
       def request
-        @request ||= EmmyHttp::Request.new
+        @request ||= self.class.superclass.respond_to?(:instance) ?
+                     self.class.superclass.instance.request.copy :
+                     EmmyHttp::Request.new
+      end
+
+      def api
+        @api ||= {}
       end
     end
 
@@ -45,16 +51,23 @@ module EmmyHttp
         instance.request.raise_error = flag
       end
 
+      def api
+        instance.api
+      end
+
       alias header headers
 
       EmmyHttp::HTTP_METHODS.each do |name|
         define_method name do |path, as: nil|
-          cdef as.to_s do |*a|
-            instance.var(as.to_s, request(path: path))
-          end
+          instance.api[as] = {path: path}
+          if as
+            cdef as.to_s do |a=nil|
+              instance.var(as.to_s, request(path: path).tap { |r| r.update_attributes(a) if a })
+            end
 
-          cdef "#{as}!" do |*a, &b|
-            send(as, *a, &b)
+            cdef "#{as}!" do |*a, &b|
+              send(as, *a, &b)
+            end
           end
         end
       end

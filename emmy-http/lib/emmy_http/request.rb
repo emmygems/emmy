@@ -11,9 +11,14 @@ module EmmyHttp
         serialize: ->(v) { v.is_a?(Addressable::Template) ? v.pattern : v.to_s }
     dictionary :headers
 
-    attribute  :path    # replace url.path
-    attribute  :query   # replace url.query
-    dictionary :params # params for url template
+    attribute  :path, # replace url.path
+        writer: ->(v) { v.is_a?(String) ? Addressable::Template.new(v) : v },
+        serialize: ->(v) { v.is_a?(Addressable::Template) ? v.pattern : (v ? v.to_s : v) }
+
+    attribute  :query    # replace url.query
+    attribute  :user     # replace url.user
+    attribute  :password # replace url.password
+    dictionary :params   # params for url template
 
     # POST, PUT
     attribute :body    # string, json hash
@@ -36,7 +41,11 @@ module EmmyHttp
         serialize: ->(value) { value.to_s }
 
     def operation
-      @operation ||= EmmyHttp::Operation.new(self, adapter.new)
+      @operation ||= new_operation
+    end
+
+    def new_operation
+      EmmyHttp::Operation.new(self, adapter.new)
     end
 
     alias op operation
@@ -50,6 +59,15 @@ module EmmyHttp
         url.expand(params)
       else
         Addressable::URI.parse(url.to_s)
+      end
+    end
+
+    def real_path
+      return nil unless path
+      if path.is_a?(Addressable::Template)
+        path.expand(params)
+      else
+        Addressable::URI.parse(path.to_s)
       end
     end
 
