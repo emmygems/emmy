@@ -1,5 +1,6 @@
 require "fibre"
 require "eventmachine"
+require "uri"
 
 require "emmy_machine/version"
 require "emmy_machine/connection"

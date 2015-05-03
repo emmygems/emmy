@@ -62,11 +62,11 @@ module EmmyHttp
           instance.api[as] = {path: path}
           if as
             cdef as.to_s do |a=nil|
-              instance.var(as.to_s, request(path: path).tap { |r| r.update_attributes(a) if a })
+              request(path: path).tap { |r| r.update_attributes(a) if a }
             end
 
             cdef "#{as}!" do |*a, &b|
-              send(as, *a, &b)
+              send(as, *a, &b).operation
             end
           end
         end

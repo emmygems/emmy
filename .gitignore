@@ -13,3 +13,5 @@ pkg/
 *.a
 mkmf.log
 Gemfile.lock
+
+*.gem
