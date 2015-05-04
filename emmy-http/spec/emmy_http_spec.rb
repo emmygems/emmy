@@ -39,7 +39,7 @@ describe EmmyHttp do
   it "do async requests" do
     req = request(adapter: FakeAdapter, raise_error: false)
     responses = {
-      a: [req.copy.get('http://google.com').op, req.copy.get('http://google.com').op],
+      a: [req.copy.get('http://google.com'), req.copy.get('http://google.com')],
       b: req.copy.get('http://google.com')
     }.sync!
 

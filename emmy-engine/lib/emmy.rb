@@ -4,6 +4,8 @@ require 'emmy_http/client'
 
 module Emmy
   extend EmmyMachine::ClassMethods
+  include EventObject
+  include Fibre::Synchrony
 
-  autoload :Http, 'emmy/http'  
+  autoload :Http, 'emmy/http'
 end
