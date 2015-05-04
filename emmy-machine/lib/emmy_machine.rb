@@ -9,4 +9,6 @@ require "emmy_machine/class_methods"
 module EmmyMachine
   include ClassMethods
   extend ClassMethods
+
+  autoload :Deferred, 'emmy_machine/deferred'
 end

@@ -1,4 +1,4 @@
-module Emmy
+module EmmyMachine
   class Deferred
     using EventObject
     events :success, :error

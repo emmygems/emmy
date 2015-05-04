@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "fibre", "~> 0.9.9"
 
+  spec.add_development_dependency "eventmachine", ">= 1.0.7"
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rspec", "~> 3"
   spec.add_development_dependency "rake"

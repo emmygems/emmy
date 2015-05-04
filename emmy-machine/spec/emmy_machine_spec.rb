@@ -49,4 +49,26 @@ describe EmmyMachine do
       expect(EmmyMachine.running?).to be true
     end
   end
+
+  context "Reactor and fiber required" do
+    around do |example|
+      EventMachine.run do
+        Fibre.pool.checkout do
+          example.run
+          EventMachine.stop
+        end
+      end
+    end
+
+    it "test deferred" do
+      defer = EmmyMachine::Deferred.new
+      EmmyMachine.timer(0) do
+        defer.success!('OK')
+      end
+      res = defer.sync
+
+      expect(res).to eq('OK')
+    end
+  end
+
 end
