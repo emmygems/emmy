@@ -7,5 +7,8 @@ module Emmy
   include EventObject
   include Fibre::Synchrony
 
-  autoload :Http, 'emmy/http'
+  autoload :Http,   'emmy/http'
+  autoload :Runner, 'emmy/runner'
 end
+
+require 'emmy/version'

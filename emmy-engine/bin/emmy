@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'emmy'
+Emmy::Runner.new(ARGV).run!
