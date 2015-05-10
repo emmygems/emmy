@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
-
 require 'emmy'
-Emmy::Runner.new(ARGV).run!
+
+runner = Emmy::Runner.instance
+
+unless runner.execute_bin_emmy
+  runner.run_action
+end

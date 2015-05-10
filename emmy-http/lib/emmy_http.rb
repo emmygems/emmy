@@ -15,16 +15,18 @@ module EmmyHttp
 
   HTTP_METHODS = %w(get head delete put post patch options)
 
-  autoload :Adapter,   "emmy_http/adapter"
-  autoload :Timeouts,  "emmy_http/client/timeouts"
-  autoload :Proxy,     "emmy_http/client/proxy"
-  autoload :SSL,       "emmy_http/client/ssl"
-  autoload :Request,   "emmy_http/request"
-  autoload :Operation, "emmy_http/operation"
-  autoload :Response,  "emmy_http/response"
-  autoload :Timeout,   "emmy_http/timeout"
-  autoload :Utils,     "emmy_http/utils"
-  autoload :Model,     "emmy_http/model"
+  autoload :Adapter,       "emmy_http/adapter"
+  autoload :Timeouts,      "emmy_http/client/timeouts"
+  autoload :Proxy,         "emmy_http/client/proxy"
+  autoload :SSL,           "emmy_http/client/ssl"
+  autoload :Configuration, "emmy_http/server/configuration"
+  autoload :Application,   "emmy_http/application"
+  autoload :Request,       "emmy_http/request"
+  autoload :Operation,     "emmy_http/operation"
+  autoload :Response,      "emmy_http/response"
+  autoload :Timeout,       "emmy_http/timeout"
+  autoload :Utils,         "emmy_http/utils"
+  autoload :Model,         "emmy_http/model"
 
   extend self
 
