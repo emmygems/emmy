@@ -20,13 +20,16 @@ module Emmy
       @action = :start_server
 
       on :parse do
-        parse_environment!(env)
+        parse_environment!
       end
       on :parse do
         option_parser.parse!(argv)
       end
       on :parse do
         defaults!
+      end
+      on :parse do
+        update_rack_environment!
       end
     end
 
@@ -36,8 +39,12 @@ module Emmy
       true
     end
 
-    def parse_environment!(env)
+    def parse_environment!
       config.environment = env['EMMY_ENV'] || env['RACK_ENV'] || 'development'
+    end
+
+    def update_rack_environment!
+      ENV['RACK_ENV'] = config.environment
     end
 
     def option_parser
@@ -110,17 +117,25 @@ module Emmy
       puts Emmy::VERSION
     end
 
+    def error(message)
+      puts message
+      exit
+    end
+
     private
 
     def backend_file
-      [
+      thin = (config.backend == 'backend') ? EmmyExtends::Thin::EMMY_BACKEND : nil rescue nil
+      backends = [
         "#{Dir.getwd}/#{config.backend}.rb",
         "#{Dir.getwd}/config/#{config.backend}.rb",
-        "emmy_http/server/backends/#{config.backend}.rb"
-      ].each do |file|
+        thin
+      ].compact
+
+      backends.each do |file|
         return file if File.readable_real?(file)
       end
-      nil
+      error "Can't find backend in #{backends.inspect} places."
     end
 
     #<<<

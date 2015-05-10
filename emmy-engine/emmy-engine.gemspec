@@ -4,7 +4,10 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'emmy/version'
 version = File.read(File.expand_path('../../EMMY_VERSION', __FILE__)).strip
-raise "Different version numbers" if version != Emmy::VERSION
+if version != Emmy::VERSION
+  puts "Different version numbers"
+  exit
+end
 
 Gem::Specification.new do |spec|
   spec.name          = "emmy-engine"
@@ -25,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "emmy-http",        "~> 0.2"
   spec.add_dependency "emmy-http-client", "~> 0.1"
 
-  spec.add_development_dependency "eventmachine", ">= 1.0.7"
+  spec.add_development_dependency "eventmachine", "~> 1.0"
   spec.add_development_dependency "bundler",      "~> 1.9"
   spec.add_development_dependency "rake",         "~> 10.0"
   spec.add_development_dependency "rspec",        "~> 3"

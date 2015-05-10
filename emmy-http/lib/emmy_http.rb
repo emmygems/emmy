@@ -21,7 +21,7 @@ module EmmyHttp
   autoload :SSL,           "emmy_http/client/ssl"
   autoload :Configuration, "emmy_http/server/configuration"
   autoload :Backend,       "emmy_http/server/backend"
-  autoload :Application,   "emmy_http/application"
+  autoload :Application,   "emmy_http/server/application"
   autoload :Request,       "emmy_http/request"
   autoload :Operation,     "emmy_http/operation"
   autoload :Response,      "emmy_http/response"

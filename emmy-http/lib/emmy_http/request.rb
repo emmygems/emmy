@@ -32,7 +32,7 @@ module EmmyHttp
     attribute :redirects, default: 6                       # max redirects to follow
     attribute :raise_error, predicate: true, default: true # raise error or return nil
 
-    object :timeouts, class_name: Timeouts, default: Timeouts
+    object :timeouts, class_name: Timeouts, as: Timeouts
     object :ssl, class_name: SSL
     object :proxy, class_name: Proxy
 
