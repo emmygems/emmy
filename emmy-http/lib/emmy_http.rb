@@ -20,6 +20,7 @@ module EmmyHttp
   autoload :Proxy,         "emmy_http/client/proxy"
   autoload :SSL,           "emmy_http/client/ssl"
   autoload :Configuration, "emmy_http/server/configuration"
+  autoload :Backend,       "emmy_http/server/backend"
   autoload :Application,   "emmy_http/application"
   autoload :Request,       "emmy_http/request"
   autoload :Operation,     "emmy_http/operation"

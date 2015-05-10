@@ -5,12 +5,10 @@ module EmmyHttp
     # options
     attribute :environment
     attribute :backend,     default: 'backend'
-    attribute :address,     default: '0.0.0.0'
-    attribute :port,        default: 3003
-    attribute :socket
-
-    # emmy
-    attribute :backend
+    attribute :url,
+        default: -> { Addressable::URI.parse('tcp://0.0.0.0:3003') },
+        writer:    ->(v) { v.is_a?(String) ? Addressable::URI.parse(v) : v },
+        serialize: ->(v) { v.to_s }
 
     # system
     attribute :user
@@ -19,10 +17,10 @@ module EmmyHttp
     attribute :log
 
     # flags
-    attribute :daemonize, default: false
-    attribute :logging,   default: true
+    attribute :daemonize,   default: false
+    attribute :logging,     default: true
 
-    object :ssl, class_name: SSL
+    object :ssl,            class_name: SSL
 
   end
 end
