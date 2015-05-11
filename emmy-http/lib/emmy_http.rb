@@ -1,6 +1,7 @@
 require "addressable/uri"
-require 'addressable/template'
+require "addressable/template"
 require "model_pack"
+require "event_object"
 require "emmy_http/version"
 require "forwardable"
 

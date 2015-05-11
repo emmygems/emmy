@@ -15,10 +15,9 @@ module EmmyHttp
     attribute :group
     attribute :pid
     attribute :log
-
-    # flags
-    attribute :daemonize,   default: false
-    attribute :logging,     default: true
+    attribute :stdout,      default: '/dev/null'
+    attribute :stdin,       default: '/dev/null'
+    attribute :stderr,      default: '/dev/null'
 
     object :ssl,            class_name: SSL
 

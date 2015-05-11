@@ -60,7 +60,7 @@ module Emmy
                                           "Default: #{config.url.host}")     { |address| config.url.host = address }
         opts.on("-b", "--backend [name]", "Backend name",
                                           "Default: backend")         { |name| config.backend = name }
-        opts.on("-d", "--daemonize", "Runs server in the background") { config.daemonize = true }
+        opts.on("-d", "--daemonize", "Runs server in the background") { @action = :daemonize_server }
         opts.on("-s", "--silence",   "Logging disabled")              { config.logging = false }
         # actions
         opts.on("-i", "--info",      "Shows server configuration") { @action = :show_configuration }
@@ -76,7 +76,12 @@ module Emmy
         config.group = "worker"
       end
 
-      config.pid ||= "tmp/pids/#{config.backend}.pid"
+      config.pid  ||= "#{config.backend}.pid"
+      config.log  ||= "#{config.backend}.log"
+      if config.environment == "development"
+        config.stdout = "#{config.backend}.stdout"
+        config.stderr = config.stdout
+      end
     end
 
     def run_action
@@ -85,6 +90,20 @@ module Emmy
       # start action
       send(action)
       self
+    end
+
+    def daemonize_server
+      Process.fork do
+        Process.setsid
+        exit if fork
+
+        scope_pid(Process.pid) do |pid|
+          puts pid
+          File.umask(0000) # rw-rw-rw-
+          bind_standard_streams
+          start_server
+        end
+      end
     end
 
     def start_server
@@ -97,7 +116,9 @@ module Emmy
       else
         require 'irb'
         require 'irb/completion'
-        IRB.start
+        EmmyMachine.run_block do
+          IRB.start
+        end
       end
     end
 
@@ -136,6 +157,30 @@ module Emmy
         return file if File.readable_real?(file)
       end
       error "Can't find backend in #{backends.inspect} places."
+    end
+
+    def scope_pid(pid)
+      FileUtils.mkdir_p(File.dirname(config.pid))
+      File.open(config.pid, 'w') { |f| f.write(pid) }
+      if block_given?
+        yield pid
+        delete_pid
+      end
+    end
+
+    def delete_pid
+      File.delete(config.pid)
+    end
+
+    def bind_standard_streams
+      STDIN.reopen("/dev/null")
+      STDOUT.reopen(config.stdout, "a")
+
+      if config.stdout == config.stderr
+        STDERR.reopen(STDOUT)
+      else
+        STDERR.reopen(config.stderr, "a")
+      end
     end
 
     #<<<

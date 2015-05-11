@@ -1,4 +1,5 @@
 require "spec_helper"
+using Emmy
 
 describe "emmy-engine" do
   around do |example|

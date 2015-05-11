@@ -3,6 +3,7 @@ require "spec_helper"
 describe "emmy/runner" do
   it "run server" do
     runner = Emmy::Runner.instance
+    expect(runner).to receive(:start_server)
     runner.run_action
   end
 
