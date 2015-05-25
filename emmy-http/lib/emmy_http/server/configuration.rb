@@ -16,10 +16,12 @@ module EmmyHttp
     attribute :pid
     attribute :log
     attribute :stdout,      default: '/dev/null'
-    attribute :stdin,       default: '/dev/null'
     attribute :stderr,      default: '/dev/null'
 
     object :ssl,            class_name: SSL
 
+    # cluster options
+    attribute :id,            default: 0
+    attribute :servers,       default: 1
   end
 end

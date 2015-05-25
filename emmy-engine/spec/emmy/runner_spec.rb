@@ -19,6 +19,15 @@ describe "emmy/runner" do
     runner.run_action
   end
 
+  it "changes server environment" do
+    runner = Emmy::Runner.instance
+    runner.argv = ["-i", "-e", "test"]
+    runner.run_action
+
+    expect(ENV['RACK_ENV']).to eq('test')
+    expect(Emmy::Runner.instance.config.environment).to eq('test')
+  end
+
   it "start a console" do
     require 'irb'
     expect(IRB).to receive(:start)

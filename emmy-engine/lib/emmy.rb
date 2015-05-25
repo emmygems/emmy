@@ -8,8 +8,15 @@ module Emmy
   include EventObject
   include Fibre::Synchrony
 
-  autoload :Http,   'emmy/http'
-  autoload :Runner, 'emmy/runner'
+  autoload :Http,    'emmy/http'
+  autoload :Backend, 'emmy/backend'
+  autoload :Runner,  'emmy/runner'
+
+  module_function
+
+  def env
+    Emmy::Runner.instance.config.environment
+  end
 end
 
 require 'emmy/version'

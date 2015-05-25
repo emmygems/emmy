@@ -36,26 +36,17 @@ module EmmyMachine
       end
     end
 
-    #
     # One run timer
-    #
-    # timeout 5 do
-    #   puts "This message shows after 5 seconds"
-    # end
-    #
     def timeout(interval=1, &b)
       EventMachine::Timer.new(interval) do
         fiber_block &b
       end
     end
 
-    #
     # Connect to remote server
     #
-    # EmmyMachine.connect("tcp://localhost:5555")
-    # EmmyMachine.connect("ipc://mypoint")
     # EmmyMachine.connect("tcp://localhost:5555", handler, *args)
-    # EmmyMachine.connect(*emmy.http.get(url))
+    # EmmyMachine.connect("ipc://mypoint")
     def connect(url, *a, &b)
       url = URI(url.to_s)
       handler = a.empty? ? Connection : a.shift
@@ -71,12 +62,10 @@ module EmmyMachine
       end
     end
 
-    #
     # Bind server
     #
     # EmmyMachine.bind("tcp://localhost:5555", ServerConnection)
     # EmmyMachine.bind("ipc://mypoint", ServerConnection)
-    # emmy.bind(*emmy.server.thin("tcp://localhost:4780", app))
     def bind(url, *a, &b)
       url = URI(url.to_s)
       handler = a.empty? ? Connection : a.shift
@@ -92,7 +81,6 @@ module EmmyMachine
       end
     end
 
-    #
     # Watch socket
     #
     # EmmyMachine.watch(socket, ClientConnection)  - notify read by default

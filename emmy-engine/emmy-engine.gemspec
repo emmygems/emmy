@@ -1,8 +1,8 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-
 require 'emmy/version'
+
 version = File.read(File.expand_path('../../EMMY_VERSION', __FILE__)).strip
 if version != Emmy::VERSION
   puts "Different version numbers"
