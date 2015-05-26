@@ -264,12 +264,12 @@ module Emmy
 
     def bind_standard_streams
       STDIN.reopen("/dev/null")
-      STDOUT.reopen(config.stdout, "a")
+      STDOUT.reopen(config.stdout, "a") if config.stdout
 
       if config.stdout == config.stderr
         STDERR.reopen(STDOUT)
       else
-        STDERR.reopen(config.stderr, "a")
+        STDERR.reopen(config.stderr, "a") if config.stderr
       end
     end
 
