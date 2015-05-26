@@ -4,7 +4,7 @@ module Emmy
   class Runner
     include Singleton
     using EventObject
-    events :init, :parse
+    events :bootstrap, :instance
 
     RUBY     = Gem.ruby
     BIN_EMMY = "bin/emmy"
@@ -21,20 +21,20 @@ module Emmy
       @config = EmmyHttp::Configuration.new
       @action = :start_server
 
-      on :parse do
+      on :bootstrap do
         parse_environment!
       end
-      on :parse do
+      on :bootstrap do
         option_parser.parse!(argv)
       end
-      on :parse do
+      on :bootstrap do
         defaults!
       end
-      on :parse do
+      on :bootstrap do
         update_rack_environment!
       end
-      on :init do
-        initialize!
+      on :instance do |id|
+        instance_defaults!(id)
       end
     end
 
@@ -66,10 +66,20 @@ module Emmy
         opts.on("-b", "--backend NAME",   "Backend name",
                                           "Default: backend")         { |name| config.backend = name }
         opts.on("-d", "--daemonize",   "Runs server in the background") { @action = :daemonize_server }
-        opts.on("-s", "--servers NUM", "Number of servers to start")    { |num| @action = :daemonize_server; config.servers = num.to_i; }
+        opts.on("-s", "--servers NUM", "Number of servers to start") do |num|
+          @action = :daemonize_server if @action == :start_server
+          config.servers = num.to_i
+        end
+        opts.on('', '--id NUM',    "Server identifier")   { |id| config.id = id.to_i }
+        #opts.on('-l', '--log FILE',    "Log to file")   { |file| config.log    = file }
+        #opts.on('-o', '--output FILE', "Logs stdout to file") { |file| config.stdout = config.stderr = file }
+        #opts.on('-P', '--pid FILE',    "Pid file")      { |file| config.pid    = file }
+
         # actions
+        opts.separator "Actions:"
         opts.on("-i", "--info",      "Shows server configuration") { @action = :show_configuration }
         opts.on("-c", "--console",   "Start a console")            { @action = :start_console }
+        opts.on('-t', '--stop',      "Terminate background server") { @action = :stop_server }
         opts.on("-h", "--help",      "Display this help message")  { @action = :display_help }
         opts.on("-v", "--version",   "Display Emmy version.")      { @action = :display_version }
       end
@@ -85,62 +95,49 @@ module Emmy
         config.stdout = "#{config.backend}.stdout"
         config.stderr = config.stdout
       end
+
+      config.pid = "#{config.backend}.pid"
+      config.log = "#{config.backend}.log"
     end
 
-    def initialize!
-      if config.servers > 1
-        config.url.port += config.id
-        config.pid   = "#{config.backend}#{config.id}.pid"
-        config.log   = "#{config.backend}#{config.id}.log"
-      else
-        config.pid   = "#{config.backend}.pid"
-        config.log   = "#{config.backend}.log"
+    def instance_defaults!(id)
+      if config.id
+        config.url.port += id if config.servers
+        config.pid  = "#{config.backend}#{id}.pid"
+        config.log  = "#{config.backend}#{id}.log"
       end
     end
 
     def run_action
-      # Run parsers
-      parse!
+      # Bootstrap
+      bootstrap!
       # start action
       send(action)
       self
     end
 
     def daemonize_server
-      run_next_instance
-    end
+      each_server do
+        Process.fork do
+          Process.setsid
+          exit if fork
 
-    def run_next_instance
-      if config.id >= config.servers
-        exit
-      end
+          Fibre.reset
+          # Boot instance
+          instance!
 
-      Process.fork do
-        Process.setsid
-        if fork
-          config.id += 1
-          run_next_instance
-        end
-
-        Fibre.reset
-        # can load configuration
-        init.fire_for(self)
-
-        scope_pid(Process.pid) do |pid|
-          puts pid
-          File.umask(0000)
-          bind_standard_streams
-          run
+          scope_pid(Process.pid) do |pid|
+            puts pid
+            File.umask(0000)
+            bind_standard_streams
+            start_server
+          end
         end
       end
+      sleep(1)
     end
 
     def start_server
-      init.fire_for(self)
-      run
-    end
-
-    def run
       Emmy.run do
         trap("INT")  { Emmy.stop }
         trap("TERM") { Emmy.stop }
@@ -148,6 +145,13 @@ module Emmy
         Emmy.fiber_block do
           Backend.module_eval(File.read(backend_file), backend_file)
         end
+      end
+    end
+
+    def stop_server
+      each_server do
+        instance!
+        stop_pid(config.pid)
       end
     end
 
@@ -165,7 +169,6 @@ module Emmy
     end
 
     def show_configuration
-      init.fire_for(self)
       puts "Server configuration:"
       config.attributes.each do |name, value|
         value = "off" if value.nil?
@@ -187,10 +190,34 @@ module Emmy
     end
 
     def configure(&b)
-      on :init, &b
+      on :bootstrap, &b
+    end
+
+    def each(&b)
+      on :instance, &b
+    end
+
+    def bootstrap!
+      bootstrap.fire_for(self)
+    end
+
+    def instance!
+      instance.fire_for(self, config.id)
     end
 
     private
+
+    def each_server
+      unless config.servers
+        yield
+        return
+      end
+
+      config.servers.times do |id|
+        config.id = id
+        yield
+      end
+    end
 
     def backend_file
       thin = (config.backend == 'backend') ? EmmyExtends::Thin::EMMY_BACKEND : nil rescue nil
@@ -208,7 +235,7 @@ module Emmy
 
     def scope_pid(pid)
       FileUtils.mkdir_p(File.dirname(config.pid))
-      stop_pid(File.read(config.pid).to_i) if File.exists?(config.pid)
+      stop_pid(config.pid)
       File.open(config.pid, 'w') { |f| f.write(pid) }
       if block_given?
         yield pid
@@ -216,16 +243,19 @@ module Emmy
       end
     end
 
-    def stop_pid(pid)
+    def stop_pid(pid_file)
+      return unless File.exists?(pid_file)
+
+      pid = File.read(pid_file).to_i
       unless pid.zero?
         Process.kill("TERM", pid)
-        puts "Restarting..."
+        puts "Stopping..."
         while File.exists?(config.pid)
           sleep(0.1)
         end
         #Process.wait(pid)
       end
-    rescue
+    rescue Errno::ESRCH
     end
 
     def delete_pid

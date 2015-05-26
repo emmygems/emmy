@@ -15,7 +15,11 @@ module Emmy
   module_function
 
   def env
-    Emmy::Runner.instance.config.environment
+    env.config.environment
+  end
+
+  def runner
+    Emmy::Runner.instance
   end
 end
 

@@ -13,15 +13,6 @@ module EmmyHttp
       self.new(default_app, &block).to_app
     end
 
-    def load(file)
-      instance_eval(File.read(file), file)
-    end
-
-    def load_config
-      config = Emmy::Runner.instance.config
-      load "#{config.backend}/#{config.environment}.rb"
-    end
-
     def configure(&b)
       instance_eval(&b)
     end

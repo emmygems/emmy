@@ -21,7 +21,7 @@ module EmmyHttp
     object :ssl,            class_name: SSL
 
     # cluster options
-    attribute :id,            default: 0
-    attribute :servers,       default: 1
+    attribute :id
+    attribute :servers
   end
 end
