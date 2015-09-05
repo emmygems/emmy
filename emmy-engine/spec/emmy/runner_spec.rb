@@ -7,7 +7,7 @@ describe "emmy/runner" do
     runner.run_action
   end
 
-  it "display the help message" do
+  it "displays the help message" do
     runner = Emmy::Runner.instance
     runner.argv = ["-h"]
     runner.run_action

@@ -5,19 +5,25 @@ module Emmy
 
     module_function
 
-    attr_reader :apps
-
-    def app(name: nil, &b)
-      @apps ||= {}
+    def app(name=nil, &b)
       name ||= Emmy::Runner.instance.config.backend
 
       if b
         app = EmmyHttp::Application.new
         app.instance_eval(&b)
-        @apps[name] = app
+        apps(name, app)
       else
-        @apps[name]
+        apps(name)
       end
+    end
+
+    def apps(name, app=nil)
+      @apps ||= {}
+      app ? @apps[name || :default] = app : @apps[name || :default]
+    end
+
+    def to_a
+      apps.to_a
     end
 
     #<<<

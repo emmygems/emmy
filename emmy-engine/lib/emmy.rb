@@ -2,6 +2,7 @@ require 'singleton'
 require 'emmy_machine'
 require 'emmy_http'
 require 'emmy_http/client'
+require 'emmy_http/server'
 
 module Emmy
   extend EmmyMachine::ClassMethods

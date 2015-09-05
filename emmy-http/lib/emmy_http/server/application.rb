@@ -3,9 +3,10 @@ require "rack"
 module EmmyHttp
   class Application < ::Rack::Builder
     attr_accessor :config
+    attr_accessor :server
 
     def initialize(app = nil, &block)
-      @config = Emmy::Runner.instance.config.clone
+      @config = Emmy::Runner.instance.config.copy
       super
     end
 
@@ -15,6 +16,14 @@ module EmmyHttp
 
     def configure(&b)
       instance_eval(&b)
+    end
+
+    def server
+      @server ||= config.adapter.new(config, self)
+    end
+
+    def to_a
+      server.to_a
     end
   end
 end

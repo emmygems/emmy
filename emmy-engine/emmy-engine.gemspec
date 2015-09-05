@@ -25,8 +25,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "emmy-machine",     "~> 0.1"
-  spec.add_dependency "emmy-http",        "~> 0.2"
+  #spec.add_dependency "emmy-http",        "~> 0.2"
   spec.add_dependency "emmy-http-client", "~> 0.1"
+  #spec.add_dependency "emmy-http-server", "~> 0.1"
 
   spec.add_development_dependency "eventmachine", "~> 1.0"
   spec.add_development_dependency "bundler",      "~> 1.9"

@@ -37,7 +37,7 @@ module EmmyHttp
     object :proxy, class_name: Proxy
 
     attribute :adapter,
-        writer:    ->(class_name) { class_name.is_a?(String) ? constantize(class_name) : class_name },
+        writer:    ->(class_name) { class_name.is_a?(String) ? UtilPack.constantize(class_name) : class_name },
         serialize: ->(value) { value.to_s }
 
     def operation
@@ -82,11 +82,6 @@ module EmmyHttp
 
     def error(message)
       raise RequestError, message
-    end
-
-    def constantize(class_name)
-      return nil unless /\A(?:::)?([A-Z]\w*(?:::[A-Z]\w*)*)\z/ =~ class_name
-      Object.module_eval("::#{$1}", __FILE__, __LINE__)
     end
 
     #<<<

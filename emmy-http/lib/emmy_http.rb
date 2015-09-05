@@ -4,11 +4,13 @@ require "model_pack"
 require "event_object"
 require "emmy_http/version"
 require "forwardable"
+require "util_pack"
 
 module EmmyHttp
   class HttpError < StandardError; end
   class ParserError < HttpError; end
   class RequestError < HttpError; end
+  class ResponseError < HttpError; end
   class ConnectionError < HttpError; end
   class TimeoutError < HttpError; end
   class EncoderError < HttpError; end

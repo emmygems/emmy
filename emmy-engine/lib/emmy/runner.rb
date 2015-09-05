@@ -60,37 +60,35 @@ module Emmy
         opts.on("-e", "--environment ENV", "Specifies the execution environment",
                                           "Default: #{config.environment}") { |env| config.environment = env }
         opts.on("-p", "--port PORT",      "Runs Emmy on the specified port",
-                                          "Default: #{config.url.port}")        { |port| config.url.port = port }
+                                          "Default: #{config.url.port}")    { |port| config.url.port = port }
         opts.on("-a", "--address HOST",   "Binds Emmy to the specified host",
-                                          "Default: #{config.url.host}")     { |address| config.url.host = address }
+                                          "Default: #{config.url.host}")    { |address| config.url.host = address }
         opts.on("-b", "--backend NAME",   "Backend name",
-                                          "Default: backend")         { |name| config.backend = name }
+                                          "Default: backend")           { |name| config.backend = name }
         opts.on("-d", "--daemonize",   "Runs server in the background") { @action = :daemonize_server }
         opts.on("-s", "--servers NUM", "Number of servers to start") do |num|
           @action = :daemonize_server if @action == :start_server
           config.servers = num.to_i
         end
-        opts.on('', '--id NUM',    "Server identifier")   { |id| config.id = id.to_i }
+        opts.on('', '--id NUM',    "Server identifier")         { |id| config.id = id.to_i }
+        opts.on('', '--pre',       "Prerelease server version") do |id|
+          config.adapter = EmmyHttp::Server::Server
+        end
         #opts.on('-l', '--log FILE',    "Log to file")   { |file| config.log    = file }
         #opts.on('-o', '--output FILE', "Logs stdout to file") { |file| config.stdout = config.stderr = file }
         #opts.on('-P', '--pid FILE',    "Pid file")      { |file| config.pid    = file }
 
         # actions
         opts.separator "Actions:"
-        opts.on("-i", "--info",      "Shows server configuration") { @action = :show_configuration }
-        opts.on("-c", "--console",   "Start a console")            { @action = :start_console }
+        opts.on("-i", "--info",      "Shows server configuration")  { @action = :show_configuration }
+        opts.on("-c", "--console",   "Start a console")             { @action = :start_console }
         opts.on('-t', '--stop',      "Terminate background server") { @action = :stop_server }
-        opts.on("-h", "--help",      "Display this help message")  { @action = :display_help }
-        opts.on("-v", "--version",   "Display Emmy version.")      { @action = :display_version }
+        opts.on("-h", "--help",      "Display this help message")   { @action = :display_help }
+        opts.on("-v", "--version",   "Display Emmy version.")       { @action = :display_version }
       end
     end
 
     def defaults!
-      if Process.uid == 0
-        config.user  = "worker"
-        config.group = "worker"
-      end
-
       if config.environment == "development"
         config.stdout = "#{config.backend}.stdout"
         config.stderr = config.stdout
@@ -98,6 +96,8 @@ module Emmy
 
       config.pid = "#{config.backend}.pid"
       config.log = "#{config.backend}.log"
+
+      config.adapter ||= EmmyExtends::Thin::Controller rescue nil
     end
 
     def instance_defaults!(id)
@@ -143,7 +143,8 @@ module Emmy
         trap("TERM") { Emmy.stop }
 
         Emmy.fiber_block do
-          Backend.module_eval(File.read(backend_file), backend_file)
+          file = backend_file
+          Backend.module_eval(File.read(file), file)
         end
       end
     end
