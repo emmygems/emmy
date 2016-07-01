@@ -4,7 +4,7 @@ module Emmy
   class Runner
     include Singleton
     using EventObject
-    events :bootstrap, :instance
+    events :bootstrap, :instance, :parse_options
 
     RUBY     = Gem.ruby
     BIN_EMMY = "bin/emmy"
@@ -24,7 +24,7 @@ module Emmy
       on :bootstrap do
         parse_environment!
       end
-      on :bootstrap do
+      on :parse_options do
         option_parser.parse!(argv)
       end
       on :bootstrap do
@@ -110,7 +110,8 @@ module Emmy
 
     def run_action
       # Bootstrap
-      bootstrap!
+      bootstrap! if @action != :display_help
+      parse_options!
       # start action
       send(action)
       self
