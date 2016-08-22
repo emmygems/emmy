@@ -4,6 +4,3 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'eventmachine', '~> 1.0.7'
-
-gem 'emmy-http', path: '~/Dropbox/Projects/emmy/emmy-http'
-gem 'emmy-http-server', path: '~/Dropbox/Projects/emmy-http-server'

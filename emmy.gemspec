@@ -4,16 +4,16 @@ version = File.read(File.expand_path('../EMMY_VERSION', __FILE__)).strip
 Gem::Specification.new do |spec|
   spec.name          = "emmy"
   spec.version       = version
+  spec.summary       = %q{Emmy is EventMachine-based framework}
+  spec.license       = "MIT"
+
   spec.authors       = ["inre"]
   spec.email         = ["inre.storm@gmail.com"]
-  spec.summary       = %q{Emmy - EventMachine-based framework}
-  #spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.homepage      = "https://github.com/emmygems"
 
   spec.files         = ["README.md"]
 
-  spec.required_ruby_version     = '>= 2.1.0'
+  spec.required_ruby_version     = '>= 2.2.2'
   spec.required_rubygems_version = '>= 2.3.0'
 
   spec.add_dependency "eventmachine", "~> 1.0"

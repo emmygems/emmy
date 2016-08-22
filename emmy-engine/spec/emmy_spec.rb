@@ -6,7 +6,7 @@ describe "emmy-engine" do
     Emmy.run_block &example
   end
 
-  it "does request to google.com #1" do
+  it "sends a request to google.com #1" do
     response = Emmy::Http.request.get('http://google.com').sync
 
     expect(response.status).to be(200)
@@ -14,7 +14,7 @@ describe "emmy-engine" do
     expect(response.body.size).to be > 100
   end
 
-  it "does request to google.com #2" do
+  it "sends a request to google.com #2" do
     response = Emmy::Http.request(url: 'http://google.com').sync
 
     expect(response.status).to be(200)
@@ -22,7 +22,7 @@ describe "emmy-engine" do
     expect(response.body.size).to be > 100
   end
 
-  it "does multi-requests" do
+  it "sends the bundle of requests in parallel" do
     res = [Emmy::Http.request!(url: 'http://google.com'), Emmy::Http.request!(url: 'http://google.com')].sync
     expect(res[0].status).to be(200)
     expect(res[1].status).to be(200)

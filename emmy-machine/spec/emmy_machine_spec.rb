@@ -3,13 +3,13 @@ require "spec_helper"
 describe EmmyMachine do
   using EventObject
 
-  it "test run_block" do
+  it "calls run_block" do
     expect { |block|
       EmmyMachine.run_block &block
     }.to yield_control
   end
 
-  it "test run_block with raise" do
+  it "calls run_block then an error will be raised" do
     expect {
       EmmyMachine.run_block do
         raise "error"
@@ -17,7 +17,7 @@ describe EmmyMachine do
     }.to raise_error Fibre::FiberError
   end
 
-  it "test connect" do
+  it "connects to the Github's index page" do
     expect { |block|
       EventMachine.run do
         http = EmmyMachine.connect("tcp://github.com:80")
@@ -37,7 +37,7 @@ describe EmmyMachine do
     }.to yield_control.at_least(1)
   end
 
-  context "Reactor required" do
+  context "The reactor is required" do
     around do |example|
       EventMachine.run do
         example.run
@@ -45,12 +45,12 @@ describe EmmyMachine do
       end
     end
 
-    it "test running?" do
+    it "is runned" do
       expect(EmmyMachine.running?).to be true
     end
   end
 
-  context "Reactor and fiber required" do
+  context "The reactor and the fibers are required" do
     around do |example|
       EventMachine.run do
         Fibre.pool.checkout do
@@ -60,7 +60,7 @@ describe EmmyMachine do
       end
     end
 
-    it "test deferred" do
+    it "is deferred" do
       defer = EmmyMachine::Deferred.new
       EmmyMachine.timer(0) do
         defer.success!('OK')

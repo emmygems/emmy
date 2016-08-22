@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "fibre", "~> 0.9"
+  spec.add_dependency "event_object", "~> 0.9"
 
   spec.add_development_dependency "eventmachine", "~> 1.0"
   spec.add_development_dependency "bundler",      "~> 1.6"

@@ -5,19 +5,22 @@ require 'emmy/version'
 
 version = File.read(File.expand_path('../../EMMY_VERSION', __FILE__)).strip
 if version != Emmy::VERSION
-  puts "Different version numbers"
+  puts "Emmy Engine gem has the different version than Emmy gem has. (expect #{Emmy::VERSION}, found #{version})"
   exit
 end
 
 Gem::Specification.new do |spec|
   spec.name          = "emmy-engine"
   spec.version       = Emmy::VERSION
+  spec.summary       = %q{Emmy Engine is a part of Emmy framework.}
+  spec.description   = %q{Emmy Engine is a part of Emmy framework.
+It provides opportunity to call the console commands like staring HTTP server, displaying server configuration,
+generating boilerplate code.}
+  spec.license       = "MIT"
+
   spec.authors       = ["inre"]
   spec.email         = ["inre.storm@gmail.com"]
-
-  spec.summary       = %q{Emmy Engine}
-  #spec.description   = %q{TODO: Write a longer description or delete this line.}
-  #spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/emmygems"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "bin"
@@ -25,9 +28,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "emmy-machine",     "~> 0.1"
-  #spec.add_dependency "emmy-http",        "~> 0.2"
+  spec.add_dependency "emmy-http",        "~> 0.2"
   spec.add_dependency "emmy-http-client", "~> 0.1"
-  #spec.add_dependency "emmy-http-server", "~> 0.1"
+  spec.add_dependency "emmy-http-server", "~> 0.1"
 
   spec.add_development_dependency "eventmachine", "~> 1.0"
   spec.add_development_dependency "bundler",      "~> 1.9"

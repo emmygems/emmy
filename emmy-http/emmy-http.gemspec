@@ -3,6 +3,12 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'emmy_http/version'
 
+version = File.read(File.expand_path('../../EMMY_VERSION', __FILE__)).strip
+if version != EmmyHttp::VERSION
+  puts "Different version numbers"
+  exit
+end
+
 Gem::Specification.new do |spec|
   spec.name          = "emmy-http"
   spec.version       = EmmyHttp::VERSION
@@ -19,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "event_object",   "~> 0.9"
-  spec.add_dependency "emmy-machine",   "~> 0.1"
+  spec.add_dependency "emmy-machine",   "~> 0.2"
   spec.add_dependency "fibre",          "~> 0.9"
   spec.add_dependency "util_pack",      "~> 0.1"
   spec.add_dependency "model_pack",     "~> 0.9"

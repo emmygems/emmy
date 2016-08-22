@@ -14,7 +14,7 @@ describe EmmyHttp do
     EmmyMachine.run_block &example
   end
 
-  it "do http request with fake adapter" do
+  it "should send HTTP-request with the fake adapter" do
     request = EmmyHttp::Request.new(
       type: 'get',
       url: 'http://google.com'
@@ -27,7 +27,7 @@ describe EmmyHttp do
     expect(response.body).to eq "OK"
   end
 
-  it "do http request with short syntax" do
+  it "should send HTTP-request using the short syntax" do
     response = request(adapter: FakeAdapter, raise_error: false).get('http://google.com').sync
 
     expect(response).to_not be nil
@@ -36,7 +36,7 @@ describe EmmyHttp do
     expect(response.body).to eq "OK"
   end
 
-  it "do async requests" do
+  it "should send several requests in parallel" do
     req = request(adapter: FakeAdapter, raise_error: false)
     responses = {
       a: [req.copy.get('http://google.com'), req.copy.get('http://google.com')],
@@ -48,14 +48,14 @@ describe EmmyHttp do
     expect(responses[:b].status).to be 200
   end
 
-  it "should wait a couple seconds" do
+  it "should be waiting couple seconds" do
     timeout = EmmyHttp::Timeout.new(2)
     res = timeout.sync
 
     expect(res).to be true
   end
 
-  it "should serialize request" do
+  it "should pack settings of the request in the Hash/Array structure" do
     request = EmmyHttp::Request.new(
       type: 'get',
       url: 'http://google.com'
