@@ -24,17 +24,18 @@ module Emmy
       on :bootstrap do
         parse_environment!
       end
-      on :parse_options do
-        option_parser.parse!(argv)
-      end
       on :bootstrap do
         defaults!
       end
-      on :bootstrap do
-        update_rack_environment!
-      end
       on :instance do |id|
         instance_defaults!(id)
+      end
+      
+      on :parse_options do
+        option_parser.parse!(argv)
+      end
+      on :parse_options do
+        update_rack_environment!
       end
     end
 
@@ -200,11 +201,11 @@ module Emmy
     end
 
     def bootstrap!
-      bootstrap.fire_for(self)
+      bootstrap.instance_fire(self)
     end
 
     def instance!
-      instance.fire_for(self, config.id)
+      instance.instance_fire(self, config.id)
     end
 
     private

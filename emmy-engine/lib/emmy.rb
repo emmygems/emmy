@@ -13,6 +13,10 @@ module Emmy
   autoload :Backend, 'emmy/backend'
   autoload :Runner,  'emmy/runner'
 
+  module Rack
+    autoload :Async,  'emmy/rack/async'
+  end
+
   module_function
 
   def env

@@ -3,11 +3,11 @@ using Emmy
 
 describe "emmy-engine" do
   around do |example|
-    Emmy.run_block &example
+    Emmy.run_once &example
   end
 
   it "sends a request to google.com #1" do
-    response = Emmy::Http.request.get('http://google.com').sync
+    response = Emmy::Http.request.get('http://google.com').await
 
     expect(response.status).to be(200)
     expect(response.content_type).to eq('text/html')
@@ -15,7 +15,7 @@ describe "emmy-engine" do
   end
 
   it "sends a request to google.com #2" do
-    response = Emmy::Http.request(url: 'http://google.com').sync
+    response = Emmy::Http.request(url: 'http://google.com').await
 
     expect(response.status).to be(200)
     expect(response.content_type).to eq('text/html')
@@ -23,7 +23,7 @@ describe "emmy-engine" do
   end
 
   it "sends the bundle of requests in parallel" do
-    res = [Emmy::Http.request!(url: 'http://google.com'), Emmy::Http.request!(url: 'http://google.com')].sync
+    res = [Emmy::Http.request!(url: 'http://google.com'), Emmy::Http.request!(url: 'http://google.com')].await
     expect(res[0].status).to be(200)
     expect(res[1].status).to be(200)
   end

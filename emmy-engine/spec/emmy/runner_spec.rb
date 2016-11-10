@@ -28,7 +28,7 @@ describe "emmy/runner" do
     expect(Emmy::Runner.instance.config.environment).to eq('test')
   end
 
-  it "start a console" do
+  it "start console" do
     require 'irb'
     expect(IRB).to receive(:start)
     runner = Emmy::Runner.instance

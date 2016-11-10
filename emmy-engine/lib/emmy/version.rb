@@ -1,3 +1,3 @@
 module Emmy
-  VERSION = "0.2.15"
+  VERSION = "0.4"
 end
