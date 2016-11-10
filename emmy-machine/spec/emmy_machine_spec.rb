@@ -3,15 +3,15 @@ require "spec_helper"
 describe EmmyMachine do
   using EventObject
 
-  it "calls run_block" do
+  it "calls run_once" do
     expect { |block|
-      EmmyMachine.run_block &block
+      EmmyMachine.run_once &block
     }.to yield_control
   end
 
-  it "calls run_block then an error will be raised" do
+  it "calls run_once then an error will be raised" do
     expect {
-      EmmyMachine.run_block do
+      EmmyMachine.run_once do
         raise "error"
       end
     }.to raise_error Fibre::FiberError
@@ -65,7 +65,7 @@ describe EmmyMachine do
       EmmyMachine.timer(0) do
         defer.success!('OK')
       end
-      res = defer.sync
+      res = defer.await
 
       expect(res).to eq('OK')
     end

@@ -17,7 +17,7 @@ describe EmmyHttp do
   it "should send HTTP-request with the fake adapter" do
     request = EmmyHttp::Request.new(
       type: 'get',
-      url: 'http://google.com'
+      url: 'http://httpbin.org'
     )
     operation = EmmyHttp::Operation.new(request, FakeAdapter.new)
     response = operation.sync
@@ -39,8 +39,8 @@ describe EmmyHttp do
   it "should send several requests in parallel" do
     req = request(adapter: FakeAdapter, raise_error: false)
     responses = {
-      a: [req.copy.get('http://google.com'), req.copy.get('http://google.com')],
-      b: req.copy.get('http://google.com')
+      a: [req.copy.get('http://httpbin.org'), req.copy.get('http://httpbin.org')],
+      b: req.copy.get('http://httpbin.org')
     }.sync!
 
     expect(responses[:a][0].status).to be 200
@@ -58,7 +58,7 @@ describe EmmyHttp do
   it "should pack settings of the request in the Hash/Array structure" do
     request = EmmyHttp::Request.new(
       type: 'get',
-      url: 'http://google.com'
+      url: 'http://httpbin.org'
     )
     request_hash = request.serializable_hash
 

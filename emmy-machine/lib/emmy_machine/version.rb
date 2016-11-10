@@ -1,3 +1,3 @@
 module EmmyMachine
-  VERSION = "0.2"
+  VERSION = "0.4"
 end

@@ -16,30 +16,38 @@ module EmmyMachine
       EventMachine.stop
     end
 
-    def run_block &b
+    def run_once &b
       EventMachine.run do
-        fiber_block do
+        async do
           yield
           stop
         end
       end
     end
 
-    def fiber_block &b
-      Fibre.pool.checkout &b
+    def init_pool(*a)
+      Fibre.init_pool(*a)
     end
 
-    # Periodic timer
+    def pool
+      Fibre.pool
+    end
+
+    def async &b
+      pool.checkout &b
+    end
+
+    # Run the timer periodically
     def timer(interval=1, &b)
       EventMachine::PeriodicTimer.new(interval) do
-        fiber_block &b
+        async &b
       end
     end
 
-    # One run timer
+    # Run the timer once
     def timeout(interval=1, &b)
       EventMachine::Timer.new(interval) do
-        fiber_block &b
+        async &b
       end
     end
 

@@ -3,8 +3,8 @@ module EmmyMachine
     using EventObject
     events :success, :error
 
-    def sync
-      Fiber.sync do |fiber|
+    def await
+      Fiber.await do |fiber|
         on :success do |response|
           fiber.resume response
         end
