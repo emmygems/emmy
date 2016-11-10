@@ -12,10 +12,10 @@ end
 Gem::Specification.new do |spec|
   spec.name          = "emmy-http"
   spec.version       = EmmyHttp::VERSION
-  spec.authors       = ["inre"]
+  spec.authors       = ["Maksim V."]
   spec.email         = ["inre.storm@gmail.com"]
-  spec.summary       = %q{EmmyHttp - EventMachine's HTTP Client}
-  #spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Ruby HTTP interface}
+  spec.description   = spec.summary
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -24,15 +24,15 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "event_object",   "~> 0.9"
+  spec.add_dependency "event_object",   "~> 1"
   spec.add_dependency "emmy-machine",   "~> 0.2"
-  spec.add_dependency "fibre",          "~> 0.9"
+  spec.add_dependency "fibre",          "~> 1"
   spec.add_dependency "util_pack",      "~> 0.1"
-  spec.add_dependency "model_pack",     "~> 0.9"
-  spec.add_dependency "addressable",    "~> 2.3"
+  spec.add_dependency "model_pack",     "~> 1"
+  spec.add_dependency "addressable",    "~> 2.5"
 
   spec.add_development_dependency "eventmachine", "~> 1.0"
-  spec.add_development_dependency "bundler",      "~> 1.6"
-  spec.add_development_dependency "rake",         "~> 10.0"
+  spec.add_development_dependency "bundler",      "~> 1.12"
+  spec.add_development_dependency "rake",         "~> 10"
   spec.add_development_dependency "rspec",        "~> 3"
 end
