@@ -11,7 +11,7 @@ describe EmmyHttp do
   end
 
   around do |example|
-    EmmyMachine.run_block &example
+    EmmyMachine.run_once &example
   end
 
   it "should send HTTP-request with the fake adapter" do
@@ -20,7 +20,7 @@ describe EmmyHttp do
       url: 'http://httpbin.org'
     )
     operation = EmmyHttp::Operation.new(request, FakeAdapter.new)
-    response = operation.sync
+    response = operation.await
 
     expect(response.status).to be 200
     expect(response.headers).to include("Content-Type")
@@ -28,7 +28,7 @@ describe EmmyHttp do
   end
 
   it "should send HTTP-request using the short syntax" do
-    response = request(adapter: FakeAdapter, raise_error: false).get('http://google.com').sync
+    response = request(adapter: FakeAdapter, raise_error: false).get('http://google.com').await
 
     expect(response).to_not be nil
     expect(response.status).to be 200
@@ -41,7 +41,7 @@ describe EmmyHttp do
     responses = {
       a: [req.copy.get('http://httpbin.org'), req.copy.get('http://httpbin.org')],
       b: req.copy.get('http://httpbin.org')
-    }.sync!
+    }.await!
 
     expect(responses[:a][0].status).to be 200
     expect(responses[:a][1].status).to be 200
@@ -49,8 +49,8 @@ describe EmmyHttp do
   end
 
   it "should be waiting couple seconds" do
-    timeout = EmmyHttp::Timeout.new(2)
-    res = timeout.sync
+    timeout = EmmyHttp::Timer.new(2)
+    res = timeout.await
 
     expect(res).to be true
   end
@@ -62,6 +62,6 @@ describe EmmyHttp do
     )
     request_hash = request.serializable_hash
 
-    expect(request_hash).to include(type: 'get', url: 'http://google.com')
+    expect(request_hash).to include(type: 'get', url: 'http://httpbin.org')
   end
 end

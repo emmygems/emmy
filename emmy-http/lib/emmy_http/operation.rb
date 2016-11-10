@@ -25,8 +25,8 @@ module EmmyHttp
       EmmyMachine.reconnect(*self)
     end
 
-    def sync
-      Fiber.sync do |fiber|
+    def await
+      Fiber.await do |fiber|
         # create connection
         connect
 

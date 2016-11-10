@@ -61,11 +61,11 @@ module EmmyHttp
         define_method name do |path, as: nil|
           instance.api[as] = {path: path}
           if as
-            cdef as.to_s do |a=nil|
+            define_singleton_method as.to_s do |a=nil|
               request(path: path).tap { |r| r.update_attributes(a) if a }
             end
 
-            cdef "#{as}!" do |*a, &b|
+            define_singleton_method "#{as}!" do |*a, &b|
               send(as, *a, &b).operation
             end
           end

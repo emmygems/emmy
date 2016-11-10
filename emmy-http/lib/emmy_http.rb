@@ -28,7 +28,7 @@ module EmmyHttp
   autoload :Request,       "emmy_http/request"
   autoload :Operation,     "emmy_http/operation"
   autoload :Response,      "emmy_http/response"
-  autoload :Timeout,       "emmy_http/timeout"
+  autoload :Timer,         "emmy_http/timer"
   autoload :Utils,         "emmy_http/utils"
   autoload :Model,         "emmy_http/model"
 

@@ -15,17 +15,6 @@ module EmmyHttp
       end
     end
 
-    def sync
-      Fiber.sync do |fiber|
-        # create connection
-        start
-
-        on :timeout do
-          fiber.resume true
-        end
-      end
-    end
-
     def await
       Fiber.await do |fiber|
         # create connection

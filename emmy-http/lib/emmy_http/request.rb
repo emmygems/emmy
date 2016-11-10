@@ -50,8 +50,8 @@ module EmmyHttp
 
     alias op operation
 
-    def sync
-      operation.sync
+    def await
+      operation.await
     end
 
     def real_url
