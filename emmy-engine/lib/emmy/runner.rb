@@ -27,10 +27,11 @@ module Emmy
       on :bootstrap do
         defaults!
       end
+
       on :instance do |id|
         instance_defaults!(id)
       end
-      
+
       on :parse_options do
         option_parser.parse!(argv)
       end
@@ -159,7 +160,7 @@ module Emmy
     end
 
     def start_console
-      EmmyMachine.run_block do
+      EmmyMachine.run_once do
         if defined?(binding.pry)
           TOPLEVEL_BINDING.pry
         else
