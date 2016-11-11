@@ -6,7 +6,12 @@ module EmmyHttp
     attr_accessor :server
 
     def initialize(app = nil, &block)
-      @config = Emmy::Runner.instance.config.copy
+      @config = if Emmy.const_defined?(:Runner)
+         Emmy::Runner.instance.config.copy
+      else
+        EmmyHttp::Configuration.new
+      end
+
       super
     end
 
@@ -17,7 +22,7 @@ module EmmyHttp
     def configure(&b)
       instance_eval(&b)
     end
-
+    
     def server
       @server ||= config.adapter.new(config, self)
     end
