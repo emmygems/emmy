@@ -39,9 +39,20 @@ describe EmmyMachine do
 
   context "The reactor is required" do
     around do |example|
-      EventMachine.run do
+      EmmyMachine.run do
         example.run
-        EventMachine.stop
+        EmmyMachine.stop
+      end
+    end
+
+    it "Async/await scenario" do
+      EmmyMachine.async do
+        res = EmmyMachine.await do |f|
+          EventMachine.next_tick do
+            f.resume 42
+          end
+        end
+        expect(res).to be(42)
       end
     end
 

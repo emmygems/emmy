@@ -17,7 +17,7 @@ module EmmyMachine
     end
 
     def run_once &b
-      EventMachine.run do
+      run do
         async do
           yield
           stop
@@ -35,6 +35,10 @@ module EmmyMachine
 
     def async &b
       pool.checkout &b
+    end
+
+    def await &b
+      Fiber.await &b
     end
 
     # Run the timer periodically
